@@ -1,0 +1,24 @@
+{
+  "id": "0",
+  "jsonrpc": "2.0",
+  "result": {
+    "active-status": "active",
+    "booted-status": null,
+    "current-epoch-performance": {
+      "current-epoch-signing-percent": {
+        "current-epoch-signed": 18911,
+        "current-epoch-signing-percentage": "0.994792214623882167",
+        "current-epoch-to-sign": 19010
+      }
+    },
+    "currently-in-committee": true,
+    "epos-status": "currently elected",
+    "epos-winning-stake": "3852978439761059632000000.000000000000000000",
+    "lifetime": {
+      "apr": "0.096073810890071659",
+      "blocks": {
+        "signed": 760119,
+        "to-sign": 761498
+      },
+ 
+//end of the file not necessary in this example -> deleted

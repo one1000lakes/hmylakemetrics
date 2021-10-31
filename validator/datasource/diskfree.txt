@@ -1,0 +1,18 @@
+Filesystem                        1K-blocks      Used Available Use% Mounted on
+udev                                4029504         0   4029504   0% /dev
+tmpfs                                814936      1180    813756   1% /run
+/dev/mapper/ubuntu--vg-ubuntu--lv  20511312   8106200  11340152  42% /
+tmpfs                               4074672         0   4074672   0% /dev/shm
+tmpfs                                  5120         0      5120   0% /run/lock
+tmpfs                               4074672         0   4074672   0% /sys/fs/cgroup
+/dev/vda2                            999320    208368    722140  23% /boot
+/dev/vdb                          515010816 315787584 172992448  65% /data
+/dev/vda1                            523248      5356    517892   2% /boot/efi
+/dev/loop1                            56832     56832         0 100% /snap/core18/2128
+/dev/loop0                            63360     63360         0 100% /snap/core20/1169
+/dev/loop2                            68864     68864         0 100% /snap/lxd/21545
+/dev/loop3                            33280     33280         0 100% /snap/snapd/13270
+/dev/loop4                            33280     33280         0 100% /snap/snapd/13640
+/dev/loop5                            72064     72064         0 100% /snap/lxd/21029
+/dev/loop6                            56832     56832         0 100% /snap/core18/2246
+tmpfs                                814932         0    814932   0% /run/user/1000

@@ -1,0 +1,5 @@
+PING xxxyyyzzz.xyz (124.124.124.124) 56(84) bytes of data.
+
+--- xxxyyyzzz.xyz ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2486ms
+rtt min/avg/max/mdev = 169.490/169.641/169.731/0.107 ms
