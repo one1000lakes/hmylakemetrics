@@ -7,7 +7,7 @@
 while getopts t:p:e:s:r:h: flag
 do
     case "${flag}" in
-    t) interval=${OPTARG};;
+        t) interval=${OPTARG};;
 	p) path=${OPTARG};;
 	e) hmypath=${OPTARG};;
 	s) shard=${OPTARG};;
@@ -85,6 +85,9 @@ then
   ""/usr/bin/php ${path}/php/send_validatorinfo.php""
   sleep 1
   ""/usr/bin/df > ${path}/datasource/diskfree.txt""
+  sleep 1
+  ""/usr/bin/echo ${shard} > ${path}/datasource/shards_to_sign.txt""
+  ""/usr/bin/php ${path}/php/send_shards.php""
   sleep 1
   ""/usr/bin/php ${path}/php/send_dbsize.php""
   #Ping measurement 1, local ping, preferably some server in same country your node is located to measure if your own network is working normally
