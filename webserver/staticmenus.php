@@ -6,6 +6,9 @@ define('SITE_TITLE', 'My validator / Node data');
 //Site name on navbar
 define('NAVBAR_TXT', 'My validator / Node data');
 
+//Navbar link to validator home page
+define('NAVBAR_LINK', 'https://www.myvalidatorhomepage.example');
+
 function staticmenus_drawnav() {
 	echo '
 	<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
@@ -13,7 +16,7 @@ function staticmenus_drawnav() {
     <span class="navbar-toggler-icon"></span>
 	</button>
 	
-	<a class="navbar-brand" href="#">' . NAVBAR_TXT . '</a>
+	<a class="navbar-brand" href="' . NAVBAR_LINK . '">' . NAVBAR_TXT . '</a>
 
 	<div class="collapse navbar-collapse" id="navbars">
         <div class="navbar-nav">

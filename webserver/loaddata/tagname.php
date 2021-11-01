@@ -7,12 +7,12 @@ if(!isset($_GET["api_key"]) || $_GET["api_key"] !== API_KEY){
     exit;
 }
 
-$tagname_notsafe = $_GET["tagname"];
+$tagname_notsafe = htmlspecialchars($_GET["tagname"]);
 $tagname_safe = mysqli_real_escape_string($con, $tagname_notsafe);
 
 //If sender node specified then read value from that sender node, if not then read only with tagname and pick newest entry
 if (isset($_GET["sender_node"])) {
-	$sender_node_notsafe = $_GET["sender_node"];
+	$sender_node_notsafe = htmlspecialchars($_GET["sender_node"]);
     $sender_node_safe = mysqli_real_escape_string($con, $sender_node_notsafe);
 	
 	$result = mysqli_query($con, "SELECT valueint, TIMESTAMPDIFF(SECOND,timestamp,NOW()) as seconds_ago FROM metrics_now WHERE tagname = '" . $tagname_safe . "' AND sender_node = '" . $sender_node_safe . "';");

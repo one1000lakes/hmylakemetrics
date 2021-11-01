@@ -11,7 +11,7 @@ if(!isset($_GET["api_key"]) || $_GET["api_key"] !== API_KEY){
 
 //Read passed arguments and escape them
 
-$sender_node_notsafe = $_GET["sender_node"];
+$sender_node_notsafe = htmlspecialchars($_GET["sender_node"]);
 $sender_node_safe = mysqli_real_escape_string($con, $sender_node_notsafe);
 
 //Format self update url

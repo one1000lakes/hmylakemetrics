@@ -11,12 +11,19 @@ if(!isset($_GET["api_key"]) || $_GET["api_key"] !== API_KEY){
     exit;
 }
 
+//Uncomment these lines if updating data is only allowed from specific ip addresses. Only uncomment matching definitions from database.php
+//$sender_ip_address = isset($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
+//if ($sender_ip_address !== ALLOWED_IP1 && $sender_ip_address !== ALLOWED_IP2) {
+//	mysqli_close($con);
+//  exit;
+//}
+
 //Read passed arguments and escape them
 
-$sender_node_notsafe = $_GET["sender_node"];
-$tagname_notsafe = $_GET["tagname"];
-$valuetype_notsafe = $_GET["valuetype"];
-$value_notsafe = $_GET["value"];
+$sender_node_notsafe = htmlspecialchars($_GET["sender_node"]);
+$tagname_notsafe = htmlspecialchars($_GET["tagname"]);
+$valuetype_notsafe = htmlspecialchars($_GET["valuetype"]);
+$value_notsafe = htmlspecialchars($_GET["value"]);
 
 $sender_node_safe = mysqli_real_escape_string($con, $sender_node_notsafe);
 $tagname_safe = mysqli_real_escape_string($con, $tagname_notsafe);

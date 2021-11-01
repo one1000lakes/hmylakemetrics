@@ -42,7 +42,7 @@ staticmenus_drawnav();
   <div class="hmylakemetrics-template">
     
 	<div class="lead d-flex justify-content-center">
-    <div>Statistics</div>
+    <div>Validator status</div>
 	</div>
 	<br>
 	
@@ -355,6 +355,9 @@ staticmenus_drawnav();
 	?>
 
     </div>
+	<div class="row justify-content-center">
+	  <a href="https://github.com/one1000lakes/hmylakemetrics" class="link-primary mt-4">created with hmylakemetrics</a>
+	</div>
   </div>
 
 </main>
