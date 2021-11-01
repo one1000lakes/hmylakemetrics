@@ -18,37 +18,37 @@ done
 
 if [ -z ${interval+x} ]
 then
-  echo "Time interval flag missing! Set with -t flag. Example: /data/hmymetrics/metrics_wrapper.sh -t 1 -p /data/hmymetrics -e /home/user/hmy -s 1 -r example.remotenod3.com -h one123456789abcdefghijklmnopqrstuvwxyz"
+  echo "Time interval flag missing! Set with -t flag. Example: /data/hmylakemetrics/metrics_wrapper.sh -t 1 -p /data/hmylakemetrics -e /home/user/hmy -s 1 -r example.remotenod3.com -h one123456789abcdefghijklmnopqrstuvwxyz"
   exit 1
 fi
 
 if [ -z ${path+x} ]
 then
-  echo "Path flag missing! Set with -p flag. Example: /data/hmymetrics/metrics_wrapper.sh -t 1 -p /data/hmymetrics -e /home/user/hmy -s 1 -r example.remotenod3.com -h one123456789abcdefghijklmnopqrstuvwxyz"
+  echo "Path flag missing! Set with -p flag. Example: /data/hmylakemetrics/metrics_wrapper.sh -t 1 -p /data/hmylakemetrics -e /home/user/hmy -s 1 -r example.remotenod3.com -h one123456789abcdefghijklmnopqrstuvwxyz"
   exit 1
 fi
 
 if [ -z ${shard+x} ]
 then
-  echo "Shard to be signed flag missing! Set with -s flag. Example: /data/hmymetrics/metrics_wrapper.sh -t 1 -p /data/hmymetrics -e /home/user/hmy -s 1 -r example.remotenod3.com -h one123456789abcdefghijklmnopqrstuvwxyz"
+  echo "Shard to be signed flag missing! Set with -s flag. Example: /data/hmylakemetrics/metrics_wrapper.sh -t 1 -p /data/hmylakemetrics -e /home/user/hmy -s 1 -r example.remotenod3.com -h one123456789abcdefghijklmnopqrstuvwxyz"
   exit 1
 fi
 
 if [ -z ${remoteaddress+x} ]
 then
-  echo "Remote node address flag missing! Set with -r flag. Example: /data/hmymetrics/metrics_wrapper.sh -t 1 -p /data/hmymetrics -e /home/user/hmy -s 1 -r example.remotenod3.com -h one123456789abcdefghijklmnopqrstuvwxyz"
+  echo "Remote node address flag missing! Set with -r flag. Example: /data/hmylakemetrics/metrics_wrapper.sh -t 1 -p /data/hmylakemetrics -e /home/user/hmy -s 1 -r example.remotenod3.com -h one123456789abcdefghijklmnopqrstuvwxyz"
   exit 1
 fi
 
 if [ -z ${nodehash+x} ]
 then
-  echo "Node hash flag missing! Set with -h flag. Example: /data/hmymetrics/metrics_wrapper.sh -t 1 -p /data/hmymetrics -e /home/user/hmy -s 1 -r example.remotenod3.com -h one123456789abcdefghijklmnopqrstuvwxyz"
+  echo "Node hash flag missing! Set with -h flag. Example: /data/hmylakemetrics/metrics_wrapper.sh -t 1 -p /data/hmylakemetrics -e /home/user/hmy -s 1 -r example.remotenod3.com -h one123456789abcdefghijklmnopqrstuvwxyz"
   exit 1
 fi
 
 if [ -z ${hmypath+x} ]
 then
-  echo "Hmy executable path flag missing! Set with -e flag. Example: /data/hmymetrics/metrics_wrapper.sh -t 1 -p /data/hmymetrics -e /home/user/hmy -s 1 -r example.remotenod3.com -h one123456789abcdefghijklmnopqrstuvwxyz"
+  echo "Hmy executable path flag missing! Set with -e flag. Example: /data/hmylakemetrics/metrics_wrapper.sh -t 1 -p /data/hmylakemetrics -e /home/user/hmy -s 1 -r example.remotenod3.com -h one123456789abcdefghijklmnopqrstuvwxyz"
   exit 1
 fi
 

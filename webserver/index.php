@@ -246,6 +246,13 @@ staticmenus_drawnav();
 	echo "</tr>";
 	
 	echo "<tr>";
+	echo "<td>Signing shard</td>";
+	echo "<td>" . $shard_to_sign . "</td>";
+	echo "<td>" . $shard_to_sign . "</td>";
+	echo "<td></td>";
+	echo "</tr>";
+	
+	echo "<tr>";
 	echo "<td>Sign percentage 10min avg [%]</td>";
 	echo "<td>" . $node1_10min_sign_percent . "</td>";
 	echo "<td>" . $node2_10min_sign_percent . "</td>";
@@ -315,12 +322,15 @@ staticmenus_drawnav();
 	echo "<td>" . $combined_currentepoch_percentage . "</td>";
 	echo "</tr>";
 	
+	//If signing other shard than 0 then show also shard 0 block ids. Otherwise just shard 0
+	if ($shard_to_sign !== '0') {
 	echo "<tr>";
 	echo "<td>Shard 0 block id</td>";
 	echo "<td>" . $node1_localnodeshard0_blockid . "</td>";
 	echo "<td>" . $node2_localnodeshard0_blockid . "</td>";
 	echo "<td>" . $mainnode_shard0_blockid . "</td>";
 	echo "</tr>";
+	}
 	
 	echo "<tr>";
 	echo "<td>Shard " . $shard_to_sign . " block id</td>";
