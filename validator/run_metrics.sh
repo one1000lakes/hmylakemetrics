@@ -16,39 +16,47 @@ do
     esac
 done
 
+#Ping address 1, local ping address, preferably some server in same country your node is located to measure if your own network is working normally
+#Set empty (ping1address="") to disable ping
+ping1address="fi.hma.rocks"
+
+#Ping measurement 2, remote ping address, preferably some server in same country where main node is located (USA) to measure if marine cables and international networks are working normally
+#Set empty (ping2address="") to disable ping
+ping2address="ca.us.hma.rocks"
+
 if [ -z ${interval+x} ]
 then
-  echo "Time interval flag missing! Set with -t flag. Example: /data/hmylakemetrics/metrics_wrapper.sh -t 1 -p /data/hmylakemetrics -e /home/user/hmy -s 1 -r example.remotenod3.com -h one123456789abcdefghijklmnopqrstuvwxyz"
+  echo "Time interval flag missing! Set with -t flag. Example: /data/hmymetrics/metrics_wrapper.sh -t 1 -p /data/hmymetrics -e /home/user/hmy -s 1 -r example.remotenod3.com -h one123456789abcdefghijklmnopqrstuvwxyz"
   exit 1
 fi
 
 if [ -z ${path+x} ]
 then
-  echo "Path flag missing! Set with -p flag. Example: /data/hmylakemetrics/metrics_wrapper.sh -t 1 -p /data/hmylakemetrics -e /home/user/hmy -s 1 -r example.remotenod3.com -h one123456789abcdefghijklmnopqrstuvwxyz"
+  echo "Path flag missing! Set with -p flag. Example: /data/hmymetrics/metrics_wrapper.sh -t 1 -p /data/hmymetrics -e /home/user/hmy -s 1 -r example.remotenod3.com -h one123456789abcdefghijklmnopqrstuvwxyz"
   exit 1
 fi
 
 if [ -z ${shard+x} ]
 then
-  echo "Shard to be signed flag missing! Set with -s flag. Example: /data/hmylakemetrics/metrics_wrapper.sh -t 1 -p /data/hmylakemetrics -e /home/user/hmy -s 1 -r example.remotenod3.com -h one123456789abcdefghijklmnopqrstuvwxyz"
+  echo "Shard to be signed flag missing! Set with -s flag. Example: /data/hmymetrics/metrics_wrapper.sh -t 1 -p /data/hmymetrics -e /home/user/hmy -s 1 -r example.remotenod3.com -h one123456789abcdefghijklmnopqrstuvwxyz"
   exit 1
 fi
 
 if [ -z ${remoteaddress+x} ]
 then
-  echo "Remote node address flag missing! Set with -r flag. Example: /data/hmylakemetrics/metrics_wrapper.sh -t 1 -p /data/hmylakemetrics -e /home/user/hmy -s 1 -r example.remotenod3.com -h one123456789abcdefghijklmnopqrstuvwxyz"
+  echo "Remote node address flag missing! Set with -r flag. Example: /data/hmymetrics/metrics_wrapper.sh -t 1 -p /data/hmymetrics -e /home/user/hmy -s 1 -r example.remotenod3.com -h one123456789abcdefghijklmnopqrstuvwxyz"
   exit 1
 fi
 
 if [ -z ${nodehash+x} ]
 then
-  echo "Node hash flag missing! Set with -h flag. Example: /data/hmylakemetrics/metrics_wrapper.sh -t 1 -p /data/hmylakemetrics -e /home/user/hmy -s 1 -r example.remotenod3.com -h one123456789abcdefghijklmnopqrstuvwxyz"
+  echo "Node hash flag missing! Set with -h flag. Example: /data/hmymetrics/metrics_wrapper.sh -t 1 -p /data/hmymetrics -e /home/user/hmy -s 1 -r example.remotenod3.com -h one123456789abcdefghijklmnopqrstuvwxyz"
   exit 1
 fi
 
 if [ -z ${hmypath+x} ]
 then
-  echo "Hmy executable path flag missing! Set with -e flag. Example: /data/hmylakemetrics/metrics_wrapper.sh -t 1 -p /data/hmylakemetrics -e /home/user/hmy -s 1 -r example.remotenod3.com -h one123456789abcdefghijklmnopqrstuvwxyz"
+  echo "Hmy executable path flag missing! Set with -e flag. Example: /data/hmymetrics/metrics_wrapper.sh -t 1 -p /data/hmymetrics -e /home/user/hmy -s 1 -r example.remotenod3.com -h one123456789abcdefghijklmnopqrstuvwxyz"
   exit 1
 fi
 
@@ -90,17 +98,22 @@ then
   ""/usr/bin/php ${path}/php/send_shards.php""
   sleep 1
   ""/usr/bin/php ${path}/php/send_dbsize.php""
-  #Ping measurement 1, local ping, preferably some server in same country your node is located to measure if your own network is working normally
-  #Comment these out to disable ping measurement
   sleep 1
-  ""/usr/bin/ping -c 3 -q -W 1 fi.hma.rocks > ${path}/datasource/ping1.txt""
+  #Ping measurement 1 if address set
+  if [ ! -z "$ping1address" ]
+  then
+  ""/usr/bin/ping -c 3 -q -W 1 ${ping1address} > ${path}/datasource/ping1.txt""
   sleep 1
   ""/usr/bin/php ${path}/php/send_ping1.php""
-  #Ping measurement 2, remote ping, preferably some server is same country where main node is located (USA) to measure if marine cables and international networks are working normally
-  #Comment these out to disable ping measurement
   sleep 1
-  ""/usr/bin/ping -c 3 -q -W 1 ca.us.hma.rocks > ${path}/datasource/ping2.txt""
+  fi
+  #Ping measurement 2 if address set
+  if [ ! -z "$ping2address" ]
+  then
+  ""/usr/bin/ping -c 3 -q -W 1 ${ping2address} > ${path}/datasource/ping2.txt""
   sleep 1
   ""/usr/bin/php ${path}/php/send_ping2.php""
+  sleep 1
+  fi
 
 fi

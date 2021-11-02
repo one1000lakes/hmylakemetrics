@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `harmonymetrics` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `harmonymetrics`;
 -- MySQL dump 10.13  Distrib 8.0.18, for Win64 (x86_64)
 --
 -- Host: 192.168.1.210    Database: harmonymetrics
@@ -47,4 +45,4 @@ CREATE TABLE `metrics_now` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-11-01 22:27:24
+-- Dump completed on 2021-11-02 14:21:13
