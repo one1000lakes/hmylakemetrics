@@ -87,6 +87,7 @@ ping2address="ca.us.hma.rocks"
 ```
 
 ping1address: Local ping address, set this address to some server in same country your node is located to measure if your own network latency is normal.
+
 ping2address: Remote ping address, set this address to some server in same country where harmony api server is located (US) to measure if marine cables and international networks are working normally.
 
 You can also set those variables to empty (="") to disable ping measurement.
@@ -108,10 +109,15 @@ Syntax for metrics_wrapper.sh:
 metrics_wrapper.sh -t MINUTEINTERVAL -p BASEPATH -e HMYPATH -s SHARD_NODE_SIGNS -r REMOTENODEADDRESS -h NODEHASH
 
 MINUTEINTERVAL = Specifies which actions are run by this call. 1 minute interval includes latest block headers from local node, remote node (backup) and from harmony api and also local metrics. 5 minute interval includes all 1 minute actions and additionally validator information, disk size information, shard number this node is signing and ping measurements.
+
 BASEPATH = Directory where scripts are installed (datasource and php folders and also .sh scripts)
+
 HMYPATH = Path to hmy executable
+
 SHARD_NODE_SIGNS = Shard number this node is signing
+
 REMOTENODEADDRESS = Ip or domain of this nodes *backup node*. If scripts are installed now on node 1 then input is node 2 address and vice versa.
+
 NODEHASH = Validator node address. Same that can be viewed at https://staking.harmony.one/validators when opening details of validator under "Validator address"
 
 Example lines to be added to */etc/crontab*:
