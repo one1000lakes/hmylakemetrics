@@ -182,7 +182,7 @@ sudo mkdir hmylakemetrics
 cd hmylakemetrics
 sudo wget -c https://github.com/one1000lakes/hmylakemetrics/blob/main/releases/webserver.tar?raw=true -O webserver.tar
 sudo tar -xvf webserver.tar
-rm webserver.tar
+sudo rm webserver.tar
 ```
 
 
