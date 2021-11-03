@@ -10,7 +10,7 @@ Simple scripts for sending Harmony ONE validator node and backup node performanc
   * Validator node: hmy-cli (https://docs.harmony.one/home/network/validators/node-setup/hmy-cli-download), php-cli (installation is covered in instructions)
   * Web server (node can also act as web server but not recommended): web server (apache2 etc.), php (tested with 7.3 but other versions should also work), mysql or mariadb (tested with mysql 8.0.19)
  
-##Live example (our one1000lakes validator)
+## Live example (our one1000lakes validator)
 
 https://www.onethousandlakes.fi/hmylakemetrics/
 
