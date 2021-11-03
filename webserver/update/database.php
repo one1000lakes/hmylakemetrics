@@ -8,8 +8,12 @@ define('DB_NAME', 'hmylakemetrics');
 //Api key definition
 define('API_KEY', 'xxxyyyzzz');
 
+//Web server base address (ip or domain)
+define('HTTP_SERVER_ADDRESS', 'https://onethousandlakes.fi');
+
+//This could be used to only define protocol and uncommenting line from update_values.php to read server address $_SERVER["SERVER_ADDR"] but it doesn't work with https
 //Server protocol (url prefix). 'http://' or 'https://'
-define('HTTP_PREFIX', 'http://');
+//define('HTTP_PREFIX', 'http://');
 
 //Definition of how many days old historical measurement data is kept in history-table. Default value is '14'.
 define('HISTORICAL_DAYS', '14');

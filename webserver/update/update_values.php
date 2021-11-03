@@ -90,7 +90,8 @@ if ($tagname_safe == 'le1000') {
 	
 	//Metrics calculation
 	$self_update_url = str_replace("update_values.php", "metrics_calculation.php", $_SERVER["PHP_SELF"]);
-	$self_update_url = HTTP_PREFIX . $_SERVER["SERVER_ADDR"] . $self_update_url . '?api_key=' . API_KEY . '&sender_node=' . $sender_node_safe;
+	$self_update_url = HTTP_SERVER_ADDRESS . $self_update_url . '?api_key=' . API_KEY . '&sender_node=' . $sender_node_safe;
+	//$self_update_url = HTTP_PREFIX . $_SERVER["SERVER_ADDR"] . $self_update_url . '?api_key=' . API_KEY . '&sender_node=' . $sender_node_safe;
 
 	$response = file_get_contents($self_update_url);
 }
