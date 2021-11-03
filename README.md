@@ -15,6 +15,11 @@ Simple scripts for sending Harmony ONE validator node and backup node performanc
 https://www.onethousandlakes.fi/hmylakemetrics/
 
 
+## Project state
+
+This project is in progress. Current release is fully working with two nodes signing same shard. Later we'll release roadmap for upcoming features (added metrics, multiple nodes, multiple shards etc.).
+
+
 ## Installing scripts on validator node
 
 Scripts need to be installed on both nodes separately (primary and backup). One of the nodes is called node 1 and other is node 2. Scripts are installed same way on both of them but be careful in configuration between both nodes.
