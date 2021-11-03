@@ -206,6 +206,17 @@ sudo mysql < hmylakemetrics_metrics_now.sql
 sudo mysql < hmylakemetrics_metrics_history.sql 
 ```
 
+If you get error "unknown collation utf8mb4..." your mysql version may be older than version 5.5 and you need to use utf8 instead. In that case utf8mb4_0900_ai_ci needs to be replaced with utf8_general_ci and CHARSET=utf8mb4 needs to be replaced with CHARSET=utf8.
+
+You can replace charset with these commands after downloading .sql files if your mysql doesn't support utf8mb4 charset:
+```
+sed -i 's/utf8mb4_0900_ai_ci/utf8_general_ci/g' hmylakemetrics_metrics_now.sql
+sed -i 's/CHARSET=utf8mb4/CHARSET=utf8/g' hmylakemetrics_metrics_now.sql
+
+sed -i 's/utf8mb4_0900_ai_ci/utf8_general_ci/g' hmylakemetrics_metrics_history.sql  
+sed -i 's/CHARSET=utf8mb4/CHARSET=utf8/g' hmylakemetrics_metrics_history.sql  
+```
+
 ### Step 3: Create mysql user for hmylakemetrics database
 
 Next we create user in mysql for connecting to database and grant rights to database *hmylakemetrics*. Change *exampleuser* and *password123* by your own preferences.
