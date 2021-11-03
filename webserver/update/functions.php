@@ -1,24 +1,117 @@
 <?php
-require 'database.php';
-require 'math_functions.php';
+function getMedian($numbers){
+//Returns median value of value array
 
-//Check api key and exit if not provided or wrong
+sort($numbers);
+$count = sizeof($numbers);   // cache the count
+$index = floor($count/2);  // cache the index
+if (!$count) {
+    echo "no values";
+	return -1;
+} elseif ($count & 1) {    // count is odd
+    return $numbers[$index];
+} else {                   // count is even
+    return ($numbers[$index-1] + $numbers[$index]) / 2;
+}
+}
 
-if(!isset($_GET["api_key"]) || $_GET["api_key"] !== API_KEY){
-    mysqli_close($con);
+function getAverage_wo_minmax($numbers){
+//Counts average of middle numbers leaving out 1 biggest and 1 smallest. Minimum count of 3 numbers
+
+sort($numbers);
+
+$limit = sizeof($numbers) - 1;
+$counted = 0;
+$sum = 0.0;
+
+//If not enough numbers then return 0.0;
+if (sizeof($numbers) < 3) {
+	return 0.0;
+}
+
+for ($i = 1; $i < $limit; ++$i) {
+    $sum = $sum + $numbers[$i];
+	$counted = $counted + 1;
+}
+
+return $sum / $counted;
+}
+
+function getAverage_wo_2min2max($numbers){
+//Counts average of middle numbers leaving out 2 biggest and 2 smallest. Minimum count of 5 numbers
+
+sort($numbers);
+
+$limit = sizeof($numbers) - 2;
+$counted = 0;
+$sum = 0.0;
+
+//If not enough numbers then return 0.0;
+if (sizeof($numbers) < 5) {
+	return 0.0;
+}
+
+for ($i = 2; $i < $limit; ++$i) {
+    $sum = $sum + $numbers[$i];
+	$counted = $counted + 1;
+}
+
+return $sum / $counted;
+}
+
+function store_values($con, $sender_node_safe, $tagname_safe, $valuetype_safe, $value_safe){
+//Select column by value type
+if ($valuetype_safe == 'int') {
+    $valuecol = 'valueint';
+} elseif ($valuetype_safe == 'float') {
+    $valuecol = 'valuefloat';
+} elseif ($valuetype_safe == 'string') {
+    $valuecol = 'valuestring';
+} else {
+    echo "Error: Value type not provided";
+	mysqli_close($con);
     exit;
 }
 
-//Read passed arguments and escape them
+//Insert to history table
+$sql_query = "INSERT INTO metrics_history (timestamp, sender_node, tagname, valuetype, " . $valuecol . ") VALUES (now()," . $sender_node_safe . ",'" . $tagname_safe . "','" . $valuetype_safe . "','" . $value_safe . "');";
+$result = mysqli_query($con, $sql_query);
 
-$sender_node_notsafe = htmlspecialchars($_GET["sender_node"]);
-$sender_node_safe = mysqli_real_escape_string($con, $sender_node_notsafe);
+if ($result === TRUE) {
+    echo "New history record created successfully <br>";
+} else {
+    echo "Error in history insert query.";
+	//DEBUG: echo "Error: " . $sql_query . "<br>";
+}
 
-//Format self update url
-$self_update_url = str_replace("metrics_calculation.php", "update_values.php", $_SERVER["PHP_SELF"]);
-$self_update_url = HTTP_SERVER_ADDRESS . $self_update_url . '?api_key=' . API_KEY . '&sender_node=' . $sender_node_safe;
-//$self_update_url = HTTP_PREFIX . $_SERVER["SERVER_ADDR"] . $self_update_url . '?api_key=' . API_KEY);
+//Check if records exists in metrics_now table, if exists then update, if not exists, then insert
+$sql_query = "SELECT id FROM metrics_now WHERE sender_node = '" . $sender_node_safe . "' AND tagname = '" . $tagname_safe . "';";
+$result = mysqli_query($con, $sql_query);
 
+$record_exists = false;
+while($row = mysqli_fetch_array($result)) {
+	$record_exists = true;
+}
+
+if ($record_exists === true) {
+    $sql_query = "UPDATE metrics_now SET " . $valuecol . " = '" . $value_safe . "', timestamp = now() WHERE sender_node = " . $sender_node_safe . " AND tagname = '" . $tagname_safe . "';";
+} else {
+    $sql_query = "INSERT INTO metrics_now (timestamp, sender_node, tagname, valuetype, " . $valuecol . ") VALUES (now()," . $sender_node_safe . ",'" . $tagname_safe . "','" . $valuetype_safe . "','" . $value_safe . "');";
+}
+
+$result = mysqli_query($con, $sql_query);
+
+if ($result === TRUE && $record_exists === true) {
+    echo "Now record updated successfully <br>";
+} elseif ($result === TRUE && $record_exists === false) {
+    echo "New now record created successfully <br>";
+} else {
+    echo "Error in now-table update or insert query.";
+	//DEBUG: echo "Error: " . $sql_query . "<br>";
+}
+}
+
+function metric_calculations($con, $sender_node_safe){
 //Get shard number node is signing
 $sql_query = "SELECT valueint FROM metrics_now WHERE tagname = 'shard-to-sign' AND sender_node = " . $sender_node_safe . " LIMIT 1;";
 $result = mysqli_query($con, $sql_query);
@@ -119,10 +212,10 @@ $le1000_sign_percentage_string = number_format((float)$le1000_sign_percentage, 2
 
 
 //post values
-$response = file_get_contents('&sender_node=' . $sender_node_safe . '&tagname=signpercentage_instant&valuetype=float&value=' . $sign_percentage_string);
-$response = file_get_contents('&sender_node=' . $sender_node_safe . '&tagname=signrate_1h&valuetype=int&value=' . intval($localnode_signatures_per_hour));
-$response = file_get_contents('&sender_node=' . $sender_node_safe . '&tagname=missrate_1h&valuetype=int&value=' . intval($missed_per_hour));
-$response = file_get_contents('&sender_node=' . $sender_node_safe . '&tagname=le1000_signpercentage_instant&valuetype=float&value=' . $le1000_sign_percentage_string);
+store_values($con, $sender_node_safe, 'signpercentage_instant', 'float', $sign_percentage_string);
+store_values($con, $sender_node_safe, 'signrate_1h', 'int', intval($localnode_signatures_per_hour));
+store_values($con, $sender_node_safe, 'missrate_1h', 'int', intval($missed_per_hour));
+store_values($con, $sender_node_safe, 'le1000_signpercentage_instant', 'float', $le1000_sign_percentage_string);
 
 //Calculate 10 minute average signpercentage (avg without min and max because sometimes if block id's are not synced perfectly at read it may give wrong average)
 $sql_query = "SELECT valuefloat FROM metrics_history WHERE tagname = 'signpercentage_instant' AND sender_node = " . $sender_node_safe . " AND timestamp >= (NOW() - INTERVAL 10 MINUTE);";
@@ -147,7 +240,7 @@ $sign_percentage_10min = 0.0;
 
 //Format to 2 decimals and send value
 $sign_percentage_10min_string = number_format((float)$sign_percentage_10min, 2, '.', '');
-$response = file_get_contents('&sender_node=' . $sender_node_safe . '&tagname=signpercentage_10min_mvavg&valuetype=float&value=' . $sign_percentage_10min_string);
+store_values($con, $sender_node_safe, 'signpercentage_10min_mvavg', 'float', $sign_percentage_10min_string);
 
 //Calculate 60 minute moving average signpercentage (avg without 2 min values and 2 max values because sometimes if block id's are not synced perfectly at read it may give wrong average)
 $sql_query = "SELECT valuefloat FROM metrics_history WHERE tagname = 'signpercentage_instant' AND sender_node = " . $sender_node_safe . " AND timestamp >= (NOW() - INTERVAL 60 MINUTE);";
@@ -172,7 +265,7 @@ $sign_percentage_60min = 0.0;
 
 //Format to 2 decimals and send value
 $sign_percentage_60min_string = number_format((float)$sign_percentage_60min, 2, '.', '');
-$response = file_get_contents('&sender_node=' . $sender_node_safe . '&tagname=signpercentage_60min_mvavg&valuetype=float&value=' . $sign_percentage_60min_string);
+store_values($con, $sender_node_safe, 'signpercentage_60min_mvavg', 'float', $sign_percentage_60min_string);
 
 //Calculate 60 minute moving average le1000 signpercentage (avg without 2 min values and 2 max values because sometimes if block id's are not synced perfectly at read it may give wrong average)
 $sql_query = "SELECT valuefloat FROM metrics_history WHERE tagname = 'le1000_signpercentage_instant' AND sender_node = " . $sender_node_safe . " AND timestamp >= (NOW() - INTERVAL 60 MINUTE);";
@@ -197,8 +290,9 @@ $sign_percentage_le1000_60min = 0.0;
 
 //Format to 2 decimals and send value
 $sign_percentage_le1000_60min_string = number_format((float)$sign_percentage_le1000_60min, 2, '.', '');
-$response = file_get_contents('&sender_node=' . $sender_node_safe . '&tagname=signpercentage_le1000_60min_mvavg&valuetype=float&value=' . $sign_percentage_le1000_60min_string);
+store_values($con, $sender_node_safe, 'signpercentage_le1000_60min_mvavg', 'float', $sign_percentage_le1000_60min_string);
+}
 
 
-mysqli_close($con);
+
 ?> 

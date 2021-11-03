@@ -266,7 +266,7 @@ First we edit *database.php*:
 sudo nano /var/www/hmylakemetrics/update/database.php
 ```
 
-You need to set your mysql server address (you can use localhost address 127.0.0.1 if mysql is running on same server). Also set mysql username and password to same which we created on previous step. You don't need to change DB_NAME if you imported database from dumps in step 2 and didn't change database name. Set API_KEY to same which you created in validator node's setup step 3. HTTP_PREFIX indicates how server should call url's on itself for updating some values (like http://127.0.0.1/hmylakemetrics/update/update_values.php or https://127.0.0.1/hmylakemetrics/update/update_values.php) . Generally *http://* is insecure but this isn't important because this is only for localhost communication. It does only matter if your web server is configured to use only https or http. You can also change value of how many days old historical data is kept in metrics_history table. Default is 14 days and older data is deleted to keep database small enough.
+You need to set your mysql server address (you can use localhost address 127.0.0.1 if mysql is running on same server). Also set mysql username and password to same which we created on previous step. You don't need to change DB_NAME if you imported database from dumps in step 2 and didn't change database name. Set API_KEY to same which you created in validator node's setup step 3. You can also change value of how many days old historical data is kept in metrics_history table. Default is 14 days and older data is deleted to keep database small enough.
 
 ```
 //Database definition
@@ -277,9 +277,6 @@ define('DB_NAME', 'hmylakemetrics');
 
 //Api key definition
 define('API_KEY', 'xXx123YYYzzz');
-
-//Server protocol (url prefix). 'http://' or 'https://'
-define('HTTP_PREFIX', 'http://');
 
 //Definition of how many days old historical measurement data is kept in history-table. Default value is '14'.
 define('HISTORICAL_DAYS', '14');
