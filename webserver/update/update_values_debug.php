@@ -52,7 +52,7 @@ if ($valuetype_safe == 'int') {
 }
 
 //Insert to history table
-$sql_query = "INSERT INTO metrics_history (timestamp, sender_node, tagname, valuetype, " . $valuecol . ") VALUES (now()," . $sender_node_safe . ",'" . $tagname_safe . "','" . $valuetype_safe . "','" . 
+$sql_query = "INSERT INTO metrics_history (timestamp, sender_node, tagname, valuetype, " . $valuecol . ") VALUES (now()," . $sender_node_safe . ",'" . $tagname_safe . "','" . $valuetype_safe . "','" . $value_safe . "');";
 echo 'sql query: ' . $sql_query;
 $value_safe . "');";
 $result = mysqli_query($con, $sql_query);
@@ -100,7 +100,7 @@ if ($tagname_safe == 'le1000') {
 	
 	//Metrics calculation
 	$self_update_url = str_replace("update_values.php", "metrics_calculation.php", $_SERVER["PHP_SELF"]);
-	$self_update_url = HTTP_PREFIX . $_SERVER["SERVER_ADDR"] . $self_update_url . '?api_key=' . API_KEY . '&sender_node=' . $sender_node_safe);
+	$self_update_url = HTTP_PREFIX . $_SERVER["SERVER_ADDR"] . $self_update_url . '?api_key=' . API_KEY . '&sender_node=' . $sender_node_safe;
 
 	$response = file_get_contents($self_update_url);
 }
