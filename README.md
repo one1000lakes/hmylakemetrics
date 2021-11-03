@@ -77,7 +77,7 @@ PHP 7.4.3 (cli) ...
 
 ### Step 3: Configuration of php variables
 
-Configure settings related to sending data to web server by editing *config.php* in *php* directory. In this example file is located in */data/hmylakemetrics/php/config.php*. You can use vim/nano/winscp etc. for editing.
+Configure settings related to sending data to web server by editing *config.php* in *php* directory. In this example file is located in */data/hmylakemetrics/php/config.php*. You can use vim/nano/winscp etc. for editing. For example *nano /data/hmylakemetrics/php/config.php*.
 
 These lines should be edited:
 ```
@@ -185,10 +185,112 @@ sudo tar -xvf webserver.tar
 rm webserver.tar
 ```
 
-### Step 2: Create mysql user for hmylakemetrics
 
-If you already have 
+### Step 2: Import database and table structure
+
+Download .sql files from *database_structure_dump* to home directory and import them to mysql database. This will create database named *harmonymetrics* and create two tables in it.
+
+```
+cd /home/example-user
+wget -c https://raw.githubusercontent.com/one1000lakes/hmylakemetrics/main/database_structure_dump/hmylakemetrics_metrics_now.sql -O hmylakemetrics_metrics_now.sql
+wget -c https://raw.githubusercontent.com/one1000lakes/hmylakemetrics/main/database_structure_dump/hmylakemetrics_metrics_history.sql -O hmylakemetrics_metrics_history.sql
+sudo mysql < hmylakemetrics_metrics_now.sql 
+sudo mysql < hmylakemetrics_metrics_history.sql 
+```
+
+### Step 2: Create mysql user for hmylakemetrics database
+
+Next we create user in mysql for connecting to database and grant rights to database *hmylakemetrics*. Change *exampleuser* and *password123* by your own preferences.
+
+```
+sudo mysql
+mysql> CREATE USER 'exampleuser'@'%' IDENTIFIED WITH mysql_native_password BY 'password123';
+mysql> GRANT ALL ON hmylakemetrics.* TO 'exampleuser'@'%';
+mysql> exit
+```
+
+### Allowing outside connections to mysql (skip this if mysql is running on same server with web server)
+
+If your mysql database is running on different server than your web server or you want to admin your database with external tool (like MySQL Workbench) you need to change mysql binding address or it won't be connectable anywhere else than localhost. You don't need to do this your mysql is running on same server with web server and you don't need to use tools which need connection from other computer. And if you don't need this then you shouldn't change binding because allowing only local connections is more secure.
+
+Allowing connections from all addresses (don't do this if not needed):
+```
+sudo nano /etc/mysql/mysql.conf.d/mysqld.cnf
+
+Change this line:
+bind-address = 127.0.0.1
+
+To this:
+#bind-address = 127.0.0.1
+
+sudo service mysql restart
+```
+
+### Step 3: Create mysql user for hmylakemetrics database
+
+Next we create user in mysql for connecting to database and grant rights to database *hmylakemetrics*. Change *exampleuser* and *password123* by your own preferences.
+
+```
+sudo mysql
+mysql> CREATE USER 'exampleuser'@'%' IDENTIFIED WITH mysql_native_password BY 'password123';
+mysql> GRANT ALL ON hmylakemetrics.* TO 'exampleuser'@'%';
+mysql> exit
+```
+
+### Step 4: Configuring hmylakemetrics web page database connection
+
+We need to configure database settings etc. to our web page. In this example web page files are located in */var/www/hmylakemetrics*.
+
+First we edit *database.php*:
+
+```
+sudo nano /var/www/hmylakemetrics/update/database.php
+```
+
+You need to set your mysql server address (you can use localhost address 127.0.0.1 if mysql is running on same server). Also set mysql username and password to same which we created on previous step. You don't need to change DB_NAME if you imported database from dumps in step 2 and didn't change database name. Set API_KEY to same which you created in validator node's setup step 3. HTTP_PREFIX indicates how server should call url's on itself for updating some values (like http://127.0.0.1/hmylakemetrics/update/update_values.php or https://127.0.0.1/hmylakemetrics/update/update_values.php) . Generally *http://* is insecure but this isn't important because this is only for localhost communication. It does only matter if your web server is configured to use only https or http. You can also change value of how many days old historical data is kept in metrics_history table. Default is 14 days and older data is deleted to keep database small enough.
+
+```
+//Database definition
+define('DB_SERVER', '127.0.0.1');
+define('DB_USERNAME', 'exampleuser');
+define('DB_PASSWORD', 'password123');
+define('DB_NAME', 'hmylakemetrics');
+
+//Api key definition
+define('API_KEY', 'xXx123YYYzzz');
+
+//Server protocol (url prefix). 'http://' or 'https://'
+define('HTTP_PREFIX', 'http://');
+
+//Definition of how many days old historical measurement data is kept in history-table. Default value is '14'.
+define('HISTORICAL_DAYS', '14');
+```
+
+### Step 5: Configuring hmylakemetrics web page personalization
+
+Let's personalize web page by setting navbar text and link to validator home page. In this example web page files are located in */var/www/hmylakemetrics*.
+
+Edit *staticmenus.php*:
+
+```
+sudo nano /var/www/hmylakemetrics/staticmenus.php
+```
 
 
+SITE_TITLE is text showing on web browser title bar. NAVBAR_TXT is text on navigation bar left corner. NAVBAR_LINK is link to your validator home page (or staking page etc.).
 
-*** REST OF THE DOCUMENTATION WILL BE FINISHED SOON ***
+```
+//Site title
+define('SITE_TITLE', 'My validator / Node data');
+
+//Site name on navbar
+define('NAVBAR_TXT', 'My validator / Node data');
+
+//Navbar link to validator home page
+define('NAVBAR_LINK', 'https://www.myvalidatorhomepage.example');
+```
+
+
+### Step 6: Ready to go!
+
+Now you should be able to access to your validator metric data with browser using your web server address: *myexamplevalidatorhomepage.example/hmylakemetrics*.

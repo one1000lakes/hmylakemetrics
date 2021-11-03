@@ -1,9 +1,9 @@
 <?php
 //Database definition
-define('DB_SERVER', '192.168.1.100');
-define('DB_USERNAME', 'user');
+define('DB_SERVER', '127.0.0.1');
+define('DB_USERNAME', 'exampleuser');
 define('DB_PASSWORD', 'password123');
-define('DB_NAME', 'harmonymetrics');
+define('DB_NAME', 'hmylakemetrics');
 
 //Api key definition
 define('API_KEY', 'xxxyyyzzz');

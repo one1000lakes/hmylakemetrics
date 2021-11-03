@@ -1,8 +1,8 @@
-CREATE DATABASE  IF NOT EXISTS `harmonymetrics` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `harmonymetrics`;
+CREATE DATABASE  IF NOT EXISTS `hmylakemetrics` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `hmylakemetrics`;
 -- MySQL dump 10.13  Distrib 8.0.18, for Win64 (x86_64)
 --
--- Host: 192.168.1.210    Database: harmonymetrics
+-- Host: 127.0.0.1    Database: hmylakemetrics
 -- ------------------------------------------------------
 -- Server version	8.0.19
 
@@ -18,13 +18,13 @@ USE `harmonymetrics`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `metrics_now`
+-- Table structure for table `metrics_history`
 --
 
-DROP TABLE IF EXISTS `metrics_now`;
+DROP TABLE IF EXISTS `metrics_history`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `metrics_now` (
+CREATE TABLE `metrics_history` (
   `id` int NOT NULL AUTO_INCREMENT,
   `timestamp` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `sender_node` int NOT NULL DEFAULT '0',
@@ -34,8 +34,9 @@ CREATE TABLE `metrics_now` (
   `valuefloat` double DEFAULT NULL,
   `valuestring` varchar(90) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `index1` (`tagname`)
-) ENGINE=InnoDB AUTO_INCREMENT=76 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `index1` (`timestamp`),
+  KEY `index2` (`tagname`)
+) ENGINE=InnoDB AUTO_INCREMENT=407358 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
