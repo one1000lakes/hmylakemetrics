@@ -26,6 +26,7 @@ mkdir hmylakemetrics
 cd hmylakemetrics
 wget -c https://github.com/one1000lakes/hmylakemetrics/blob/main/releases/validator.tar?raw=true -O validator.tar
 tar -xvf validator.tar
+rm validator.tar
 ```
 
 In rest of examples in this guide we're using */data/hmylakemetrics/* as installation directory and here is same example for that. It is otherwise same but we need to change owner of that directory to our user (*example-user* in this example) so that we don't need to sudo rest of the commands:
@@ -36,6 +37,7 @@ sudo chown example-user:example-user /data/hmylakemetrics
 cd /data/hmylakemetrics
 wget -c https://github.com/one1000lakes/hmylakemetrics/blob/main/releases/validator.tar?raw=true -O validator.tar
 tar -xvf validator.tar
+rm validator.tar
 ```
 
 After copy/extract there should be two *.sh* files in our installation directory and *datasource*, *php* and *log* directories with files in them (for example: /data/hmylakemetrics/php). Actually files in *datasource* dir aren't required because they are overwritten anyway but they are there for example output.
@@ -77,11 +79,16 @@ PHP 7.4.3 (cli) ...
 
 ### Step 3: Configuration of php variables
 
-Configure settings related to sending data to web server by editing *config.php* in *php* directory. In this example file is located in */data/hmylakemetrics/php/config.php*. You can use vim/nano/winscp etc. for editing. For example *nano /data/hmylakemetrics/php/config.php*.
+Configure settings related to sending data to web server by editing *config.php* in *php* directory. In this example file is located in */data/hmylakemetrics/php/config.php*. You can use vim/nano/winscp etc. for editing.
+
+For example with nano:
+```
+nano /data/hmylakemetrics/php/config.php
+```
 
 These lines should be edited:
 ```
-$server_post_url = 'http://my.own.webserver.example/hmylakemetrics/update_values.php';
+$server_post_url = 'https://my.own.webserver.example/hmylakemetrics/update_values.php';
 $api_key = 'xXx123YYYzzz';
 $sender_node = 1;
 $basepath = '/data/hmylakemetrics';
@@ -127,6 +134,7 @@ chmod +x /data/hmylakemetrics/metrics_wrapper.sh
 
 Script *metrics_wrapper.sh* needs to be scheduled to run at 1 minute and 5 minute interval. We are using crontab to do that. Two lines need to be added to */etc/crontab*. You can use vim/nano/winscp etc. for editing crontab. There is also example crontab included in this repo at *crontab example* but you shouldn't overwrite your crontab with this file, just add two lines two your existing crontab.
 
+```
 Syntax for metrics_wrapper.sh:
 metrics_wrapper.sh -t MINUTEINTERVAL -p BASEPATH -e HMYPATH -s SHARD_NODE_SIGNS -r REMOTENODEADDRESS -h NODEHASH
 
@@ -134,14 +142,14 @@ MINUTEINTERVAL = Specifies which actions are run by this call. 1 minute interval
 
 BASEPATH = Directory where scripts are installed (datasource and php folders and also .sh scripts)
 
-HMYPATH = Path to hmy executable
+HMYPATH = Path to hmy-tool executable
 
 SHARD_NODE_SIGNS = Shard number this node is signing
 
 REMOTENODEADDRESS = Ip or domain of this nodes *backup node*. If scripts are installed now on node 1 then input is node 2 address and vice versa.
 
 NODEHASH = Validator node address. Same that can be viewed at https://staking.harmony.one/validators when opening details of validator under "Validator address"
-
+```
 
 Editing crontab using nano:
 ```
@@ -198,7 +206,7 @@ sudo mysql < hmylakemetrics_metrics_now.sql
 sudo mysql < hmylakemetrics_metrics_history.sql 
 ```
 
-### Step 2: Create mysql user for hmylakemetrics database
+### Step 3: Create mysql user for hmylakemetrics database
 
 Next we create user in mysql for connecting to database and grant rights to database *hmylakemetrics*. Change *exampleuser* and *password123* by your own preferences.
 
@@ -226,7 +234,7 @@ To this:
 sudo service mysql restart
 ```
 
-### Step 3: Create mysql user for hmylakemetrics database
+### Step 4: Create mysql user for hmylakemetrics database
 
 Next we create user in mysql for connecting to database and grant rights to database *hmylakemetrics*. Change *exampleuser* and *password123* by your own preferences.
 
@@ -237,7 +245,7 @@ mysql> GRANT ALL ON hmylakemetrics.* TO 'exampleuser'@'%';
 mysql> exit
 ```
 
-### Step 4: Configuring hmylakemetrics web page database connection
+### Step 5: Configuring hmylakemetrics web page database connection
 
 We need to configure database settings etc. to our web page. In this example web page files are located in */var/www/hmylakemetrics*.
 
@@ -266,7 +274,7 @@ define('HTTP_PREFIX', 'http://');
 define('HISTORICAL_DAYS', '14');
 ```
 
-### Step 5: Configuring hmylakemetrics web page personalization
+### Step 6: Configuring hmylakemetrics web page personalization
 
 Let's personalize web page by setting navbar text and link to validator home page. In this example web page files are located in */var/www/hmylakemetrics*.
 
@@ -291,6 +299,6 @@ define('NAVBAR_LINK', 'https://www.myvalidatorhomepage.example');
 ```
 
 
-### Step 6: Ready to go!
+### Step 7: Ready to go!
 
-Now you should be able to access to your validator metric data with browser using your web server address: *myexamplevalidatorhomepage.example/hmylakemetrics*.
+Now you should be able to access to your validator metric data with browser using your web server address: *https://my.own.webserver.example/hmylakemetrics*.
