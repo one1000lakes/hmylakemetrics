@@ -1,31 +1,15 @@
 <?php
-echo 'DEBUG: opening db connection'. PHP_EOL;
 require 'database.php';
 
 //Example updating of values:
 //http://my.webserver.example/metrics_testi/update/update_values.php?api_key=xxxyyyzzz&sender_node=1&tagname=viewid&valuetype=int&value=12512515
 
-echo 'DEBUG: db connection opened' . PHP_EOL;
-
-echo 'DEBUG: PHP_SELF: ' . $_SERVER["PHP_SELF"] . PHP_EOL;
-
-$sender_node_notsafe = htmlspecialchars($_GET["sender_node"]);
-$sender_node_safe = mysqli_real_escape_string($con, $sender_node_notsafe);
-
-$self_update_url = str_replace("update_values_debug.php", "metrics_calculation.php", $_SERVER["PHP_SELF"]);
-echo 'DEBUG: self_update_url1: ' . $self_update_url . PHP_EOL;
-$self_update_url = HTTP_PREFIX . $_SERVER["SERVER_ADDR"] . $self_update_url . '?api_key=' . API_KEY . '&sender_node=' . $sender_node_safe;
-echo 'DEBUG: self_update_url2: ' . $self_update_url . PHP_EOL;
-
 //Check api key and exit if not provided or wrong
 
 if(!isset($_GET["api_key"]) || $_GET["api_key"] !== API_KEY){
-    echo 'DEBUG: api key mismatch';
-	mysqli_close($con);
+    mysqli_close($con);
     exit;
 }
-
-echo 'DEBUG: api key ok';
 
 //Uncomment these lines if updating data is only allowed from specific ip addresses. Only uncomment matching definitions from database.php
 //$sender_ip_address = isset($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR'];
@@ -46,8 +30,6 @@ $tagname_safe = mysqli_real_escape_string($con, $tagname_notsafe);
 $valuetype_safe = mysqli_real_escape_string($con, $valuetype_notsafe);
 $value_safe = mysqli_real_escape_string($con, $value_notsafe);
 
-echo 'DEBUG: inputs escaped';
-
 //Select column by value type
 if ($valuetype_safe == 'int') {
     $valuecol = 'valueint';
@@ -63,8 +45,6 @@ if ($valuetype_safe == 'int') {
 
 //Insert to history table
 $sql_query = "INSERT INTO metrics_history (timestamp, sender_node, tagname, valuetype, " . $valuecol . ") VALUES (now()," . $sender_node_safe . ",'" . $tagname_safe . "','" . $valuetype_safe . "','" . $value_safe . "');";
-echo 'sql query: ' . $sql_query;
-$value_safe . "');";
 $result = mysqli_query($con, $sql_query);
 
 if ($result === TRUE) {
@@ -110,7 +90,9 @@ if ($tagname_safe == 'le1000') {
 	
 	//Metrics calculation
 	$self_update_url = str_replace("update_values.php", "metrics_calculation.php", $_SERVER["PHP_SELF"]);
-	$self_update_url = HTTP_PREFIX . $_SERVER["SERVER_ADDR"] . $self_update_url . '?api_key=' . API_KEY . '&sender_node=' . $sender_node_safe;
+	$self_update_url = HTTP_SERVER_ADDRESS . $self_update_url . '?api_key=' . API_KEY . '&sender_node=' . $sender_node_safe;
+	echo $self_update_url;
+	//$self_update_url = HTTP_PREFIX . $_SERVER["SERVER_ADDR"] . $self_update_url . '?api_key=' . API_KEY . '&sender_node=' . $sender_node_safe;
 
 	$response = file_get_contents($self_update_url);
 }
