@@ -7,19 +7,41 @@ Simple scripts for sending Harmony ONE validator node and backup node performanc
  * Support our work by staking to ONE Thousand Lakes: https://staking.harmony.one/validators/mainnet/one1ugvtdxau0mmd38wt42na9la9melp84alnfkyx4
  
  Requirements:
-  * Validator node: php-cli - installation is covered in instructions
+  * Validator node: hmy-cli (https://docs.harmony.one/home/network/validators/node-setup/hmy-cli-download), php-cli (installation is covered in instructions)
   * Web server (node can also act as web server but not recommended): web server (apache2 etc.), php (tested with 7.3 but other versions should also work), mysql or mariadb (tested with mysql 8.0.19)
   
 ## Installing scripts on validator node
 
 Scripts need to be installed on both nodes separately (primary and backup). One of the nodes is called node 1 and other is node 2. Scripts are installed same way on both of them but be careful in configuration between both nodes.
 
-Make installation directory where you do prefer and copy files and folders from *validator* folder to that directory. In this example we're using */data/hmylakemetrics/* but you may also make new directory to your user home directory.
 
-After copy there should be two *.sh* files in that directory and *datasource* and *php* directories with files in them (example: /data/hmylakemetrics/php). Actually files in datasource dir aren't required because they are overwritten anyway but they are there for example output.
+### Step 1: Copying scripts to node
+
+Make installation directory where you do prefer and copy files and folders from *validator* folder to that directory. In this example we're using */data/hmylakemetrics/* but you may also for example make new directory to your user home directory and use that. If you have git installed to node you can just clone this repository and copy files from there or download repository as zip and copy files to node using WinSCP. Or you can just download premade validator.tar file from this repository's *releases* folder which contains latest versions of needed files.
+
+Example of making *hmylakemetrics* folder in home directory of user named *example-user* and downloading *validator.tar* and extracting it to created folder:
+```
+cd /home/example-user
+mkdir hmylakemetrics
+cd hmylakemetrics
+wget -c https://github.com/one1000lakes/hmylakemetrics/blob/main/releases/validator.tar?raw=true -O validator.tar
+tar -xvf validator.tar
+```
+
+In rest of examples in this guide we're using */data/hmylakemetrics/* as installation directory and here is same example for that. It is otherwise same but we need to change owner of that directory to our user (*example-user* in this example) so that we don't need to sudo rest of the commands:
+```
+mkdir /data
+mkdir /data/hmylakemetrics
+sudo chown example-user:example-user /data/hmylakemetrics
+cd /data/hmylakemetrics
+wget -c https://github.com/one1000lakes/hmylakemetrics/blob/main/releases/validator.tar?raw=true -O validator.tar
+tar -xvf validator.tar
+```
+
+After copy/extract there should be two *.sh* files in our installation directory and *datasource*, *php* and *log* directories with files in them (for example: /data/hmylakemetrics/php). Actually files in *datasource* dir aren't required because they are overwritten anyway but they are there for example output.
 
 
-### Step 1: Installing php
+### Step 2: Installing php
 
 You can use Ubuntu 20.04 default php repository (version 7.4) or install newer php 8.0 from Ondřej Surý's ppa repository. Scripts work on both versions. We need only php command line version. If you plan to run also web server on validator node for visualization then you can install with command *sudo apt install php* and then also apache2 web server will be installed but I would recommend to keep web server separated from node.
 
@@ -53,7 +75,7 @@ php -v
 It should output depending on version:
 PHP 7.4.3 (cli) ...
 
-### Step 2: Configuration of php variables
+### Step 3: Configuration of php variables
 
 Configure settings related to sending data to web server by editing *config.php* in *php* directory. In this example file is located in */data/hmylakemetrics/php/config.php*. You can use vim/nano/winscp etc. for editing.
 
@@ -76,7 +98,7 @@ $basepath: Directory where you copied files and folders from *validator* folder.
 
 $devname_or_mntname: Dev or mount where your harmony database is located. This is used to monitor disk space. You can run *df* command to list filesystems and mount names. Input here is used to search correct row to pick up used and free disk space on that mount. In this example harmony database is mounted on */data* on device */dev/devb* so we could set this to */data* or */dev/devb*.
 
-### Step 3: Configuration of ping addresses
+### Step 4: Configuration of ping addresses
 
 Configure settings related to node's network ping measurement by editing *run_metrics.sh*. In this example file is located in */data/hmylakemetrics/run_metrics.sh*. You can use vim/nano/winscp etc. for editing.
 
@@ -92,7 +114,7 @@ ping2address: Remote ping address, set this address to some server in same count
 
 You can also set those variables to empty (="") to disable ping measurement.
 
-### Step 4: Setting .sh scripts executable
+### Step 5: Setting .sh scripts executable
 
 Scripts need to be chmoded to executable. In this example files are located */data/hmylakemetrics/* so replace path with your installation directory.
 
@@ -101,9 +123,9 @@ chmod +x /data/hmylakemetrics/run_metrics.sh
 chmod +x /data/hmylakemetrics/metrics_wrapper.sh
 ```
 
-### Step 5: Schedule script to run in crontab
+### Step 6: Schedule script to run in crontab
 
-Script *metrics_wrapper.sh* needs to be scheduled to run at 1 minute and 5 minute interval. We are using crontab to do that. Two lines need to be added to */etc/crontab*. You can use vim/nano/winscp etc. for editing crontab. There is also example crontab included in this repo at *crontab example* but you shouldn't overwrite you crontab with this file, just add two lines two your existing crontab.
+Script *metrics_wrapper.sh* needs to be scheduled to run at 1 minute and 5 minute interval. We are using crontab to do that. Two lines need to be added to */etc/crontab*. You can use vim/nano/winscp etc. for editing crontab. There is also example crontab included in this repo at *crontab example* but you shouldn't overwrite your crontab with this file, just add two lines two your existing crontab.
 
 Syntax for metrics_wrapper.sh:
 metrics_wrapper.sh -t MINUTEINTERVAL -p BASEPATH -e HMYPATH -s SHARD_NODE_SIGNS -r REMOTENODEADDRESS -h NODEHASH
@@ -120,17 +142,25 @@ REMOTENODEADDRESS = Ip or domain of this nodes *backup node*. If scripts are ins
 
 NODEHASH = Validator node address. Same that can be viewed at https://staking.harmony.one/validators when opening details of validator under "Validator address"
 
+
+Editing crontab using nano:
+```
+sudo nano /etc/crontab
+```
+
 Example lines to be added to */etc/crontab*:
 ```
-1-4,6-9,11-14,16-19,21-24,26-29,31-34,36-39,41-44,46-49,51-54,56-59  *    * * *   example-user /data/hmylakemetrics/metrics_wrapper.sh -t 1 -p /data/hmylakemetrics -e /home/example-user/hmy -s 1 -r example.remotenod3.com -h one123456789abcdefghijklmnopqrstuvwxyz
-*/5  *    * * *   example-user /data/hmylakemetrics/metrics_wrapper.sh -t 5 -p /data/hmylakemetrics -e /home/example-user/hmy -s 1 -r example.remotenod3.com -h one123456789abcdefghijklmnopqrstuvwxyz
+1-4,6-9,11-14,16-19,21-24,26-29,31-34,36-39,41-44,46-49,51-54,56-59  *    * * *   example-user /data/hmylakemetrics/metrics_wrapper.sh -t 1 -p /data/hmylakemetrics -e /home/example-user/hmy -s 1 -r example.remotenod3.com -h one123456789abcdefghijklmnopqrstuvwxyz > /data/hmylakemetrics/log/cron_log 2>&1
+*/5  *    * * *   example-user /data/hmylakemetrics/metrics_wrapper.sh -t 5 -p /data/hmylakemetrics -e /home/example-user/hmy -s 1 -r example.remotenod3.com -h one123456789abcdefghijklmnopqrstuvwxyz > /data/hmylakemetrics/log/cron_log 2>&1
 ```
 
 Explanation of example:
-First line is executed at minutes 1-4, 6-9, etc. and second line is executed at every 5 minutes meaning at minute 0, 5, etc. So every minute metrics_wrapper.sh is executed with other parameters being same but only telling if script should do 1 minute or 5 minute actions (-t flag). You need also specify your user name in crontab to run command. In this case user name is example-user. Location for metrics.wrapper.sh is */data/hmylakemetrics/metrics_wrapper.sh* and basepath for scripts is */data/hmylakemetrics*, hmy-executable is in users home directory so path is */home/example-user/hmy*, node is signing shard 1, backup node's address is *example.remotenod3.com* (so if this node is node 1 then that is node 2's address and vice versa), validator address is *one123456789abcdefghijklmnopqrstuvwxyz*.
+First line is executed at minutes 1-4, 6-9, etc. and second line is executed at every 5 minutes meaning at minute 0, 5, etc. So every minute metrics_wrapper.sh is executed with other parameters being same but only telling if script should do 1 minute or 5 minute actions (-t flag). You need also specify your user name in crontab to run command. In this case user name is example-user. Location for metrics.wrapper.sh is */data/hmylakemetrics/metrics_wrapper.sh* and basepath for scripts is */data/hmylakemetrics*, hmy-executable is in users home directory so path is */home/example-user/hmy*, node is signing shard 1, backup node's address is *example.remotenod3.com* (so if this node is node 1 then that is node 2's address and vice versa), validator address is *one123456789abcdefghijklmnopqrstuvwxyz*. At the end of the line is *> /data/hmylakemetrics/log/cron_log 2>&1* which means that possible output of command will be written to */data/hmylakemetrics/log/cron_log*. We don't use that output for anything but if output is not specified cronjob will try to send output by e-mail and if e-mail is not configured it will always write errors to syslog about missing email configuration. We could also redirect output to */dev/null* but it's better to write them to file if there actually is some error message so it can be read from file.
+
+After adding those lines you don't have to restart cron or anything like that. After editing crontab, system recognizes it automatically and reloads it.
 
 
-### Step 6: Making sure it's working
+### Step 7: Making sure it's working
 
 Every 1 minute there should be .txt files updating in your installation directory's /datasource folder. Some of them are updating at 1 minute interval and some at 5 minute interval. Now script is also trying to update values to web server. Although if web server is not set up yet then those tries will fail.
 
@@ -139,10 +169,25 @@ Now you can continue to set up this node's backup node same way but be careful s
 
 ## Installing web server
 
-This guide assumes that there is already web server with apache2/nginx etc, php and mysql/mariadb database installed. If not, there should be plenty of online guides for installing those. For Windows servers there is also XAMPP alternative which contains all needed components.
+This guide assumes that there is already web server with apache2/nginx etc, php and mysql/mariadb database installed. If not, there should be plenty of online guides for installing those (for example this https://www.digitalocean.com/community/tutorials/how-to-install-linux-apache-mysql-php-lamp-stack-on-ubuntu-20-04 ). For Windows servers there is also XAMPP alternative which contains all needed components.
 
-### Step 1: Creating database
+### Step 1: Copying web server files
 
+Make new directory for hmylakemetrics to your web server webpage directory (for apache2 default directory is */var/www*). For example *hmylakemetrics* and copy files and folders from *webserver* folder to that directory. In this example we're using */var/www/hmylakemetrics/*. If you have git installed to node you can just clone this repository and copy files from there or download repository as zip and copy files to node using WinSCP. Or you can just download premade *webserver.tar* file from this repository's *releases* folder which contains latest versions of needed files.
+
+Example of making *hmylakemetrics* folder in */var/www/* directory and downloading *webserver.tar* and extracting it to created folder:
+```
+cd /var/www/
+sudo mkdir hmylakemetrics
+cd hmylakemetrics
+sudo wget -c https://github.com/one1000lakes/hmylakemetrics/blob/main/releases/webserver.tar?raw=true -O webserver.tar
+sudo tar -xvf webserver.tar
+rm webserver.tar
+```
+
+### Step 2: Create mysql user for hmylakemetrics
+
+If you already have 
 
 
 
