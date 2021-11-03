@@ -16,7 +16,8 @@ $sender_node_safe = mysqli_real_escape_string($con, $sender_node_notsafe);
 
 //Format self update url
 $self_update_url = str_replace("metrics_calculation.php", "update_values.php", $_SERVER["PHP_SELF"]);
-$self_update_url = HTTP_PREFIX . $_SERVER["SERVER_ADDR"] . $self_update_url . '?api_key=' . API_KEY);
+$self_update_url = HTTP_SERVER_ADDRESS . $self_update_url . '?api_key=' . API_KEY . '&sender_node=' . $sender_node_safe;
+//$self_update_url = HTTP_PREFIX . $_SERVER["SERVER_ADDR"] . $self_update_url . '?api_key=' . API_KEY);
 
 //Get shard number node is signing
 $sql_query = "SELECT valueint FROM metrics_now WHERE tagname = 'shard-to-sign' AND sender_node = " . $sender_node_safe . " LIMIT 1;";
