@@ -241,7 +241,7 @@ mysql> exit
 
 ### Allowing outside connections to mysql (skip this if mysql is running on same server with web server)
 
-If your mysql database is running on different server than your web server or you want to admin your database with external tool (like MySQL Workbench) you need to change mysql binding address or it won't be connectable anywhere else than localhost. You don't need to do this your mysql is running on same server with web server and you don't need to use tools which need connection from other computer. And if you don't need this then you shouldn't change binding because allowing only local connections is more secure.
+If your mysql database is running on different server than your web server or you want to admin your database with external tool (like MySQL Workbench) you need to change mysql binding address or it won't be connectable anywhere else than localhost. You don't need to do this if your mysql is running on same server with web server and you don't need to use tools which need connection from other computer. And if you don't need this then you shouldn't change binding because allowing only local connections is more secure.
 
 Allowing connections from all addresses (don't do this if not needed):
 ```
