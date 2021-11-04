@@ -3,7 +3,7 @@
 require 'update/database.php';
 require 'staticmenus.php';
 
-$headline = 'Graph: Missed blocks on current epoch last 24h';
+$headline = 'Graph: Missed blocks on epoch last 7d';
 $json_path = 'chartjson/json_values_missed.php';
 $chart_title = 'Missed blocks';
 $chart_yaxis_title = 'Missed [blocks]';

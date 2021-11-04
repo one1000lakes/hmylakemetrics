@@ -10,7 +10,7 @@ $previous_id='';
 $id_now='';
 
 
-$sql = mysqli_query($con, "SELECT tagname, timestamp, sender_node, valueint FROM metrics_history WHERE timestamp >= (NOW() - INTERVAL 24 HOUR) AND tagname = 'current-epoch-missed' AND sender_node = 2 ORDER BY sender_node, tagname, timestamp;");
+$sql = mysqli_query($con, "SELECT tagname, timestamp, sender_node, valueint FROM metrics_history WHERE timestamp >= (NOW() - INTERVAL 7 DAY) AND tagname = 'current-epoch-missed' AND sender_node = 2 ORDER BY sender_node, tagname, timestamp;");
 
 
 while($row = mysqli_fetch_array($sql)) {
