@@ -4,6 +4,7 @@ Simple scripts for sending Harmony ONE validator node and backup node performanc
 
  * Hmylakemetrics consists of two parts: Scripts for nodes for sending data and website to visualize data
  * Node sends data to web server by http/https-protocol using php-arguments and web server inserts received values to mysql-database for visualization
+ * Web page utilizes Bootstrap front-end framework and Highcharts for charting
  * Support our work by staking to ONE Thousand Lakes: https://staking.harmony.one/validators/mainnet/one1ugvtdxau0mmd38wt42na9la9melp84alnfkyx4
  
  Requirements:
