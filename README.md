@@ -256,18 +256,7 @@ To this:
 sudo service mysql restart
 ```
 
-### Step 4: Create mysql user for hmylakemetrics database
-
-Next we create user in mysql for connecting to database and grant rights to database *hmylakemetrics*. Change *exampleuser* and *password123* by your own preferences.
-
-```
-sudo mysql
-mysql> CREATE USER 'exampleuser'@'%' IDENTIFIED WITH mysql_native_password BY 'password123';
-mysql> GRANT ALL ON hmylakemetrics.* TO 'exampleuser'@'%';
-mysql> exit
-```
-
-### Step 5: Configuring hmylakemetrics web page database connection
+### Step 4: Configuring hmylakemetrics web page database connection
 
 We need to configure database settings etc. to our web page. In this example web page files are located in */var/www/hmylakemetrics*.
 
@@ -293,7 +282,7 @@ define('API_KEY', 'xXx123YYYzzz');
 define('HISTORICAL_DAYS', '14');
 ```
 
-### Step 6: Configuring hmylakemetrics web page personalization
+### Step 5: Configuring hmylakemetrics web page personalization
 
 Let's personalize web page by setting navbar text and link to validator home page. In this example web page files are located in */var/www/hmylakemetrics*.
 
@@ -318,7 +307,7 @@ define('NAVBAR_LINK', 'https://www.myvalidatorhomepage.example');
 ```
 
 
-### Step 7: Ready to go!
+### Step 6: Ready to go!
 
 Now you should be able to access to your validator metric data with browser using your web server address: *https://my.own.webserver.example/hmylakemetrics*.
 
