@@ -339,4 +339,4 @@ Now you should be able to access to your validator metric data with browser usin
 | **Web UI** |    |
 | Status page| ✅ |
 | Performance charts | ✅ |
-
+| Support for two nodes signing same shard | ✅ |
