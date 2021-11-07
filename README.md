@@ -321,3 +321,22 @@ define('NAVBAR_LINK', 'https://www.myvalidatorhomepage.example');
 ### Step 7: Ready to go!
 
 Now you should be able to access to your validator metric data with browser using your web server address: *https://my.own.webserver.example/hmylakemetrics*.
+
+
+## Roadmap
+
+🔨 = In Progress
+
+🛠 = Feature complete. Additional testing required.
+
+✅ = Feature complete
+
+
+| Feature |  Status |
+| ------- |  :------: |
+| **Validator node** |    |
+| Sending metrics to web server | ✅ |
+| **Web UI** |    |
+| Status page| ✅ |
+| Performance charts | ✅ |
+
